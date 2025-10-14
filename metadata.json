@@ -1,0 +1,5 @@
+{
+  "name": "AI Video Generator",
+  "description": "A web application to generate videos from text prompts and images using AI. Users can upload and arrange image frames, write a descriptive prompt, and generate a video.",
+  "requestFramePermissions": []
+}
