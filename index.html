@@ -1,30 +1,292 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>La Fibre Orange — باقات فيبر (مُحسّن للهاتف)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10151e">
+  <meta name="description" content="تطبيق ويب أحادي الملف، سريع وسهل للهاتف لطلب اشتراك La Fibre Orange. اختيار الباقة، خصم الموظفين/قدماء المحاربين، تفاصيل العنوان، تواصل واتساب/اتصال فورًا.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="La Fibre Orange — سهل للهاتف">
+  <meta property="og:description" content="اختر سرعتك وراسلنا على واتساب بنقرة واحدة.">
+  <meta property="og:locale" content="ar_MA">
+  <style>
+    :root{
+      --bg:#0e131c; --card:#151b24; --ring:#263142; --text:#e9eef7; --muted:#a7b1c2; --brand:#ff7900; --accent:#37c6ff; --ok:#22c55e;
+      --radius:16px; --shadow:0 10px 28px rgba(0,0,0,.45); --max:680px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(160deg,#0b0f17,#121a27 58%,#0b0f17);color:var(--text);font:15.5px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    a{color:var(--accent);text-decoration:none}
+    .wrap{max-width:var(--max);margin:auto;padding:14px 14px 84px}
+    header{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:10px}
+    /* شعار Orange */
+    .logo{width:36px;height:36px;border-radius:8px;overflow:hidden;display:block}
+    .kpis{display:flex;gap:6px;flex-wrap:wrap}
+    .badge{display:inline-block;padding:4px 10px;border-radius:999px;background:#101827;border:1px solid var(--ring);color:#cbd5e1;font-size:12px}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Video Generator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      body {
-        background-color: #111827; /* bg-gray-900 */
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.24.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
-  }
-}
-</script>
+    .card{background:var(--card);border:1px solid var(--ring);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero{margin:12px 0;padding:14px;display:grid;gap:10px}
+    h1{margin:0 0 6px;font-size:20px}
+    .hint{font-size:13px;color:var(--muted)}
+
+    .step{margin:10px 0;padding:12px}
+    .step h2{margin:0 0 8px;font-size:16px}
+
+    /* خيارات الباقات (كبيرة للإبهام) */
+    .plans{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:540px){.plans{grid-template-columns:1fr}}
+    .plan{position:relative;padding:12px;border-radius:14px;border:2px solid var(--ring);background:#0f1722}
+    .plan input{position:absolute;inset:0;opacity:0}
+    .plan .top{display:flex;justify-content:space-between;align-items:center}
+    .speed{font-size:22px;font-weight:900;color:#061014;background:#8ae3ff; padding:4px 10px;border-radius:10px}
+    .price{display:flex;align-items:baseline;gap:8px;font-size:22px;font-weight:900}
+    .per{font-size:12px;color:var(--muted)}
+    .old{font-size:12px;color:var(--muted);text-decoration:line-through;display:none}
+    .plan small{color:#ff3714}
+    .plan.active{border-color:#69d2ff;box-shadow:0 0 0 4px rgba(55,198,255,.15)}
+
+    /* خصومات */
+    .seg{display:flex;gap:8px}
+    .seg label{flex:1;text-align:center;padding:10px;border-radius:12px;border:1px solid var(--ring);background:#0f1722;cursor:pointer}
+    .seg input{display:none}
+    .seg input:checked+label{outline:2px solid #3bc7ff}
+
+    /* نموذج بسيط */
+    .form{display:grid;gap:8px}
+    .form input,.form textarea{background:#0f1722;border:1px solid var(--ring);border-radius:12px;padding:12px;color:var(--text);font-size:16px}
+
+    /* CTA عائم للهاتف */
+    .sticky{position:fixed;inset-inline:0;bottom:0;display:flex;gap:8px;padding:10px;background:#0e131c;border-top:1px solid var(--ring);box-shadow:0 -10px 24px rgba(0,0,0,.25);z-index:40}
+    .btn{flex:1;display:inline-block;text-align:center;padding:14px 12px;border-radius:12px;font-weight:700;border:1px solid var(--ring);background:#0f1722;color:#fff}
+    .btn.primary{background:linear-gradient(180deg,#ff8e36,#ff7900);color:#111}
+    .btn.wa{background:linear-gradient(180deg,#35d06a,#1aa552)}
+    .btn:disabled{opacity:.6}
+
+    .sum{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+    .sum .num{font-size:22px;font-weight:900}
+
+    footer{margin-top:18px;color:#9fb0c7;text-align:center;font-size:12px}
+  </style>
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <!-- SVG شعار Orange (مضمَّن) -->
+        <svg class="logo" viewBox="0 0 100 100" role="img" aria-label="Orange logo">
+          <rect width="100" height="100" fill="#ff7900"/>
+          <text x="10" y="75" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">orange</text>
+        </svg>
+        <div>
+          <div style="font-weight:900">La Fibre Orange</div>
+          <div class="kpis">
+            <span class="badge"> تركيب فابور من 50 ميجا</span>
+            <span class="badge">روتور فابور</span>
+            <span class="badge">متخلاص حتى بداية شهر مقبل</span>
+          </div>
+        </div>
+      </div>
+      <a id="telTop" href="tel:0654074468" class="badge" aria-label="اتصال">اتصل:   0654074468 </a>
+    </header>
+
+    <section class="card hero">
+      <h1>اختر الباقة وابعث لنا على واتساب</h1>
+      
+    </section>
+    <!-- الخطوة 1: الخصم -->
+    <section class="card step">
+      <h2>2) هل لديك خصم؟</h2>
+      <div class="seg">
+        <input id="d0" name="disc" type="radio" value="0" checked><label for="d0">بدون خصم</label>
+        <input id="d25" name="disc" type="radio" value="0.25"><label for="d25">%25  الموظفون الدولة</label>
+        <input id="d50" name="disc" type="radio" value="0.5"><label for="d50">%50 قدماء المحاربين</label>
+      </div>
+    </section>
+
+
+    <!-- الخطوة 2: الباقة -->
+    <section class="card step" id="stepPlans">
+      <h2>1) اختر السرعة</h2>
+      <div class="plans" id="plans"></div>
+      <div class="hint">الأسعار شهرية.</div>
+    </section>
+
+
+
+    <!-- الخطوة 3: بيانات مختصرة -->
+    <section class="card step">
+      <h2>3) بيانات التواصل</h2>
+      <div class="form">
+        <input id="fName" placeholder="الاسم الكامل">
+        <input id="fCity" placeholder="المدينة / الحي">
+        <textarea id="fAddr" rows="2" placeholder="العنوان (اختياري)"></textarea>
+      </div>
+    </section>
+
+    <!-- مُلخص -->
+    <section class="card step">
+      <h2>الملخص</h2>
+      <div class="sum">
+        <div>
+          <div class="hint">الخطة المختارة</div>
+          <div id="sumPlan">—</div>
+        </div>
+        <div class="num" id="sumPrice" aria-live="polite">— درهم/شهر</div>
+      </div>
+    </section>
+
+    <section class="card step">
+      <h2>الوثائق (اختياري للهاتف)</h2>
+      <div class="form">
+        <input id="docFront" type="file" accept="image/*,application/pdf" capture="environment" aria-label="بطاقة التعريف — الأمام">
+        <input id="docBack"  type="file" accept="image/*,application/pdf" capture="environment" aria-label="بطاقة التعريف — الخلف">
+        <input id="docM6"    type="file" accept="image/*,application/pdf" capture="environment" aria-label="بطاقة محمد السادس">
+      </div>
+      <div class="hint">لن تُرفع ملفاتك من خلال هذا التطبيق. أرفقها يدويًا داخل واتساب بعد فتح المحادثة.</div>
+    </section>
+
+    <section class="card step">
+      <details>
+        <summary>الشروط باختصار</summary>
+        <ul>
+          <li>مدة التعهد: 12 شهرًا.</li>
+          <li>التركيب عادة بين 24 و48 ساعة بعد تأكيد العنوان والوثائق.</li>
+          <li>طرق الدفع: تحويل/بنك، دفع عبر الهاتف، تسهيلات (عند التوفر)، وخدمات Orange.</li>
+        </ul>
+      </details>
+    </section>
+
+    <footer>غير تابع رسميًا. جميع العلامات تخص أصحابها.</footer>
+  </div>
+
+  <!-- CTA سفلي للهاتف -->
+  <div class="sticky">
+    <button id="btnWA" class="btn wa" disabled>واتساب</button>
+    <a id="btnCall" class="btn" href="tel:0654074468">اتصال</a>
+    <button id="btnChoose" class="btn primary">اختر باقة</button>
+  </div>
+
+<script>
+(() => {
+  'use strict';
+  // إعدادات أساسية
+  const PHONE_WA = '212660201206';
+  const PLANS = [
+    {speed:20, price:249, color:'#ffd28b'},
+    {speed:50, price:299, color:'#ffe47d'},
+    {speed:100, price:349, color:'#9be081'},
+    {speed:200, price:449, color:'#7ee6ef'}
+  ];
+
+  const el = sel => document.querySelector(sel);
+  const plansWrap = el('#plans');
+  const btnWA = el('#btnWA');
+  const btnChoose = el('#btnChoose');
+  const sumPlan = el('#sumPlan');
+  const sumPrice = el('#sumPrice');
+
+  function currentDiscount(){
+    const r = document.querySelector('input[name="disc"]:checked');
+    return r ? Number(r.value) : 0;
+  }
+
+  // بناء كروت الباقات (كبيرة اللمس) — وضعنا السعر الأساسي كـ data-base
+  function card(p){
+    const after = Math.round(p.price * (1 - currentDiscount()));
+    return `
+    <label class="plan" data-speed="${p.speed}" data-base="${p.price}" style="border-color:#314259;background:#0f1722">
+      <input type="radio" name="plan" value="${p.speed}" aria-label="${p.speed} ميغا">
+      <div class="top">
+        <div class="speed" style="background:${p.color}">${p.speed} <small>Mb</small></div>
+        <div class="price"><span class="cur">${after}</span><small>درهم/شهر</small><span class="old"></span></div>
+      </div>
+    </label>`;
+  }
+
+  // رسم أولي
+  plansWrap.innerHTML = PLANS.map(card).join('');
+
+  // تحديث أسعار البطاقات عند تغيير الخصم
+  function updateCards(){
+    const disc = currentDiscount();
+    document.querySelectorAll('.plan').forEach(card => {
+      const base = Number(card.dataset.base);
+      const after = Math.round(base * (1 - disc));
+      const cur = card.querySelector('.cur');
+      const old = card.querySelector('.old');
+      cur.textContent = after;
+      if (disc > 0){
+        old.textContent = base;
+        old.style.display = 'inline-block';
+      } else {
+        old.textContent = '';
+        old.style.display = 'none';
+      }
+    });
+  }
+
+  function selectedPlan(){
+    const r = document.querySelector('input[name="plan"]:checked');
+    if(!r) return null;
+    const sp = Number(r.value);
+    return PLANS.find(p=>p.speed===sp);
+  }
+
+  function updateSummary(){
+    const p = selectedPlan();
+    const disc = currentDiscount();
+    if(!p){ sumPlan.textContent='—'; sumPrice.textContent='— درهم/شهر'; btnWA.disabled=true; return; }
+    const after = Math.round(p.price*(1-disc));
+    sumPlan.textContent = `${p.speed} Mb`;
+    sumPrice.textContent = `${after} درهم/شهر`;
+    btnWA.disabled=false;
+  }
+
+  plansWrap.addEventListener('change', e=>{
+    if(e.target.name==='plan'){
+      document.querySelectorAll('.plan').forEach(n=>n.classList.remove('active'));
+      e.target.closest('.plan').classList.add('active');
+      updateSummary();
+    }
+  });
+
+  document.querySelectorAll('input[name="disc"]').forEach(n=> n.addEventListener('change', ()=>{
+    updateCards();
+    updateSummary();
+  }));
+
+  // زر "اختر باقة" يركز على أول باقة إذا لم يختر
+  btnChoose.addEventListener('click', ()=>{
+    const r = document.querySelector('input[name="plan"]:checked') || document.querySelector('input[name="plan"]');
+    if(r){ r.checked = true; r.dispatchEvent(new Event('change', {bubbles:true})); document.getElementById('stepPlans').scrollIntoView({behavior:'smooth'}); }
+  });
+
+  // بناء رسالة واتساب سريعة
+  function waText(){
+    const p = selectedPlan();
+    const disc = currentDiscount();
+    const price = p ? Math.round(p.price*(1-disc)) : '-';
+    const name = el('#fName').value ? `\nالاسم: ${el('#fName').value}` : '';
+    const city = el('#fCity').value ? `\nالمدينة/الحي: ${el('#fCity').value}` : '';
+    const addr = el('#fAddr').value ? `\nالعنوان: ${el('#fAddr').value}` : '';
+    const plan = p ? `${p.speed}Mb — ${price} درهم/شهر` : 'أريد معرفة الباقات المتاحة';
+    return encodeURIComponent(`السلام عليكم، أود الاشتراك في La Fibre Orange\nالخطة: ${plan}${name}${city}${addr}\n(التزام 12 شهر — تركيب 24–48 ساعة — الدفع: بنك/هاتف/تسهيلات/Orange)`);
+  }
+
+  btnWA.addEventListener('click', ()=>{
+    window.open(`https://wa.me/${PHONE_WA}?text=${waText()}`, '_blank');
+  });
+
+  // روابط أعلى وأسفل
+  el('#telTop').href = 'tel:0654074468';
+  el('#btnCall').href = 'tel:0654074468';
+
+  // تأكد من أن الأسعار على الكروت تعكس الخصم الحالي عند التحميل
+  updateCards();
+})();
+</script>
+</body>
 </html>
